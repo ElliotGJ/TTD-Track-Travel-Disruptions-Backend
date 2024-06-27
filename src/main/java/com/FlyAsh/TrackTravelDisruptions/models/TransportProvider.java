@@ -29,5 +29,4 @@ public class TransportProvider {
 
     @OneToMany(mappedBy = "transportProvider", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<JourneyLeg> journeyLegs;
-
 }

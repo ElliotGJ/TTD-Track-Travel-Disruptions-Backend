@@ -25,6 +25,9 @@ public class JourneyLeg {
     @Column(nullable = false)
     private String destination;
 
+    @Column(nullable = false)
+    private int legOrder;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private TransportProvider transportProvider;
 
