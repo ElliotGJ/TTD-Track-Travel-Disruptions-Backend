@@ -33,10 +33,10 @@ class JourneyRepositoryTest {
         journey.setOrigin("Oxford");
         journey.setDestination("Piccadilly Circus");
         journey.setDepartureTime("8:00");
-        JourneyLeg leg1 = new JourneyLeg(1L, "Oxford", "Reading", nationalRail, null);
-        JourneyLeg leg2 = new JourneyLeg(2L, "Reading", "Paddington", nationalRail, null);
+        JourneyLeg leg1 = new JourneyLeg(1L, "Oxford", "Reading", 1, nationalRail, null);
+        JourneyLeg leg2 = new JourneyLeg(2L, "Reading", "Paddington", 2, nationalRail, null);
         nationalRail.setJourneyLegs(Set.of(leg1, leg2));
-        JourneyLeg leg3 = new JourneyLeg(3L, "Paddington", "Piccadilly Circus", transportForLondon, null);
+        JourneyLeg leg3 = new JourneyLeg(3L, "Paddington", "Piccadilly Circus", 1, transportForLondon, null);
         transportForLondon.setJourneyLegs(Set.of(leg3));
         journey.setJourneyLegs(Set.of(leg1, leg2, leg3));
         journey.setNotificationsEnabled(true);
