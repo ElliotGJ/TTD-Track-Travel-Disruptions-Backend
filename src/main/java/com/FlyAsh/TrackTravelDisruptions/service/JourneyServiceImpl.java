@@ -1,15 +1,18 @@
 package com.FlyAsh.TrackTravelDisruptions.service;
 
+import com.FlyAsh.TrackTravelDisruptions.models.Journey;
+import com.FlyAsh.TrackTravelDisruptions.repositories.JourneyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class JourneyServiceImpl {
+public class JourneyServiceImpl implements JourneyService {
 
     @Autowired
     JourneyRepository journeyRepository;
@@ -34,7 +37,7 @@ public class JourneyServiceImpl {
     public Journey addNewJourney(Journey journey) {
         //Notify will be boolean and default false
         //LeaveTime is optional and can be null
-        if(journey.getStartPoint() == null || journey.getEndPoint() == null || journey.getFrequency() == null || journey.getLeaveTime() == null){
+        if(journey.getOrigin() == null || journey.getDestination() == null || journey.getDays() == null || journey.getDepartureTime() == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incomplete info");
         }
         return journeyRepository.save(journey);
@@ -47,17 +50,17 @@ public class JourneyServiceImpl {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid ID_UPDATE");
         }
         Journey journeyToUpdate = journeyOptional.get();
-        if(journey.getStartPoint() != null){
-            journeyToUpdate.setStartPoint(journey.getStartPoint());
+        if(journey.getOrigin() != null){
+            journeyToUpdate.setOrigin(journey.getOrigin());
         }
-        if(journey.getEndPoint() != null){
-            journeyToUpdate.setEndPoint(journey.getEndPoint());
+        if(journey.getDestination() != null){
+            journeyToUpdate.setDestination(journey.getDestination());
         }
-        if(journey.getFrequency() != null){
-            journeyToUpdate.setFrequency(journey.getFrequency());
+        if(journey.getDays() != null){
+            journeyToUpdate.setDays(journey.getDays());
         }
-        if(journey.getNotify() != null){
-            journeyToUpdate.setNotify(journey.getNotify());
+        if(journey.getNotificationsEnabled() != null){
+            journeyToUpdate.setNotificationsEnabled(journey.getNotificationsEnabled());
         }
         if(journey.getDepartureTime() != null){
             journeyToUpdate.setDepartureTime(journey.getDepartureTime());

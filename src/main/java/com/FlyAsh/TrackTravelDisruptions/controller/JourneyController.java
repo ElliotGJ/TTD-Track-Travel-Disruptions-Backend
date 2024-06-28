@@ -1,7 +1,7 @@
 package com.FlyAsh.TrackTravelDisruptions.controller;
 
 import com.FlyAsh.TrackTravelDisruptions.models.Journey;
-import com.FlyAsh.TrackTravelDisruptions.Service.JourneyServiceImpl;
+import com.FlyAsh.TrackTravelDisruptions.service.JourneyServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/journey/")
 public class JourneyController {
+
     @Autowired
     JourneyServiceImpl journeyServiceImpl;
 
