@@ -1,0 +1,37 @@
+package com.FlyAsh.TrackTravelDisruptions.models;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "JOURNEY_LEG")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class JourneyLeg {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(updatable = false, nullable = false)
+    private Long id;
+
+    @Column(nullable = false)
+    private String origin;
+
+    @Column(nullable = false)
+    private String destination;
+
+    @Column(nullable = false)
+    private int legOrder;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private TransportProvider transportProvider;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Journey journey;
+
+}
