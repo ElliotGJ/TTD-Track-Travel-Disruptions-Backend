@@ -17,7 +17,6 @@ public class TrackTravelDisruptionsApplication {
 	}
 
 
-
 	/**
 	 * Start internal H2 server so we can query the DB from IDE
 	 *
@@ -31,4 +30,3 @@ public class TrackTravelDisruptionsApplication {
 	}
 
 }
-
