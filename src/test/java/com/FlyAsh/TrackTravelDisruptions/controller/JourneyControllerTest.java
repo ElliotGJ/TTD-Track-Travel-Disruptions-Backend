@@ -1,6 +1,5 @@
 package com.FlyAsh.TrackTravelDisruptions.controller;
 
-import com.FlyAsh.TrackTravelDisruptions.controller.JourneyController;
 import com.FlyAsh.TrackTravelDisruptions.models.Journey;
 import com.FlyAsh.TrackTravelDisruptions.models.JourneyLeg;
 import com.FlyAsh.TrackTravelDisruptions.models.TransportProvider;
@@ -64,18 +63,62 @@ class JourneyControllerTest {
                 new Journey(2L, false, "Origin 2", "Destination 2", days, "09:00 AM", journeyLegs)
         );
         // Act
-        when(mockJourneyServiceImpl.getAllJourney()).thenReturn(journeys);
+        when(mockJourneyServiceImpl.getAllJourneys()).thenReturn(journeys);
 
         // Assert
 
         this.mockMvcController.perform(
-                        MockMvcRequestBuilders.get("/api/v1/journey/"))
+                        MockMvcRequestBuilders.get("/api/v1/journey"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].origin").value("Origin 1"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].destination").value("Destination 2"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].departureTime").value("09:00 AM"));
 
-        verify(mockJourneyServiceImpl, times(1)).getAllJourney();
+        verify(mockJourneyServiceImpl, times(1)).getAllJourneys();
     }
+
+
+    @Test
+    @DisplayName("GetJourneyByIdTest")
+    void getJourneyById() throws Exception {
+        TransportProvider nationalRail = new TransportProvider(1L, "National Rail", "https://www.nationalrail.co.uk/", null);
+        TransportProvider transportForLondon = new TransportProvider(2L, "Transport for London", "https://tfl.gov.uk/", null);
+        Set<DayOfWeek> days = new HashSet<>(Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
+        JourneyLeg journeyLeg1 = new JourneyLeg(1L, "Oxford", "Reading", 1, nationalRail, null);
+        JourneyLeg journeyLeg2 = new JourneyLeg(2L, "Reading", "Paddington", 2, nationalRail, null);
+        Set<JourneyLeg> journeyLegs = new HashSet<>(Arrays.asList(journeyLeg1, journeyLeg2));
+        Journey journey = new Journey(1L, true, "Origin 1", "Destination 1", days, "08:00 AM", journeyLegs);
+
+        when(mockJourneyServiceImpl.getJourneyById(1L)).thenReturn(journey);
+
+        mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/journey/1"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.origin").value("Origin 1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.destination").value("Destination 1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.departureTime").value("08:00 AM"));
+
+    }
+
+    @Test
+    @DisplayName("AddNewJourneyTest")
+    public void addNewJourneyTest() throws Exception {
+        TransportProvider nationalRail = new TransportProvider(1L, "National Rail", "https://www.nationalrail.co.uk/", null);
+        TransportProvider transportForLondon = new TransportProvider(2L, "Transport for London", "https://tfl.gov.uk/", null);
+        Set<DayOfWeek> days = new HashSet<>(Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
+        JourneyLeg journeyLeg1 = new JourneyLeg(1L, "Oxford", "Reading", 1, nationalRail, null);
+        JourneyLeg journeyLeg2 = new JourneyLeg(2L, "Reading", "Paddington", 2, nationalRail, null);
+        Set<JourneyLeg> journeyLegs = new HashSet<>(Arrays.asList(journeyLeg1, journeyLeg2));
+        Journey journey = new Journey(1L, true, "Origin 1", "Destination 1", days, "08:00 AM", journeyLegs);
+
+        when(mockJourneyServiceImpl.addNewJourney(journey)).thenReturn(journey);
+
+        mockMvcController.perform(MockMvcRequestBuilders.post("/api/v1/journey")
+                .contentType("application/json")
+                .content(mapper.writeValueAsString(journey)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+
 }

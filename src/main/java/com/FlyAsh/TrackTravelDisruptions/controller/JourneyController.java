@@ -12,61 +12,40 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/journey/")
+@RequestMapping("/api/v1/journey")
 public class JourneyController {
 
     @Autowired
     JourneyServiceImpl journeyServiceImpl;
 
-    @GetMapping("/")
-    public ResponseEntity<List<Journey>> getAllJourney(){
-        return new ResponseEntity<>(journeyServiceImpl.getAllJourney(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<Journey>> getAllJourneys() {
+        return new ResponseEntity<>(journeyServiceImpl.getAllJourneys(), HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getJourneyById(@PathVariable Long id){
-        try{
-            Journey journeyById = journeyServiceImpl.getJourneyById(id);
-            return new ResponseEntity<>(journeyById, HttpStatus.OK);
-        } catch (ResponseStatusException ex){
-            return new ResponseEntity<>(ex.getReason(), HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Journey> getJourneyById(@PathVariable Long id) {
+        Journey result = journeyServiceImpl.getJourneyById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-//    @GetMapping("/journeyname/{journeyName}")
-//    public ResponseEntity<Journey> getJourneyByName(@PathVariable String journeyName){
-//        Journey journeyByName = journeyServiceImpl.getByJourneyName(journeyName);
-//        return new ResponseEntity<>(journeyByName, HttpStatus.OK);
-//    }
+    @PostMapping
+    public ResponseEntity<Journey> addNewJourney(@RequestBody Journey journey) {
+        Journey result = journeyServiceImpl.addNewJourney(journey);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
 
-    @PostMapping("/addnew")
-    public ResponseEntity<?> addNewJourney(@RequestBody Journey journey){
-        try{
-            Journey addNewJourney = journeyServiceImpl.addNewJourney(journey);
-            return new ResponseEntity<>(addNewJourney, HttpStatus.CREATED);
-        } catch (ResponseStatusException ex){
-            return new ResponseEntity<>(ex.getReason(), HttpStatus.BAD_REQUEST);
-        }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateJourneyById(@PathVariable Long id, @RequestBody Journey journey){
-        try{
-            Journey updateJourneyById = journeyServiceImpl.updateJourneyById(id, journey);
-            return new ResponseEntity<>(updateJourneyById, HttpStatus.OK);
-        } catch (ResponseStatusException ex){
-            return new ResponseEntity<>(ex.getReason(), HttpStatus.NOT_FOUND);
-        }
+    @PutMapping("/{id}")
+    public ResponseEntity<Journey> updateJourneyById(@PathVariable Long id, @RequestBody Journey journey) {
+        Journey result = journeyServiceImpl.updateJourneyById(id, journey);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteJourneyById(@PathVariable Long id){
-        try{
-            Journey deleteJourneyById = journeyServiceImpl.deleteJourneyById(id);
-            return new ResponseEntity<>(deleteJourneyById, HttpStatus.ACCEPTED);
-        } catch (ResponseStatusException ex){
-            return new ResponseEntity<>(ex.getReason(), HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteJourneyById(@PathVariable Long id) {
+        journeyServiceImpl.deleteJourneyById(id);
+        return new ResponseEntity<>("Journey Deleted", HttpStatus.ACCEPTED);
     }
 }

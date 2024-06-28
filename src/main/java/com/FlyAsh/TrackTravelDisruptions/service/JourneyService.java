@@ -5,7 +5,7 @@ import com.FlyAsh.TrackTravelDisruptions.models.Journey;
 import java.util.List;
 
 public interface JourneyService {
-    List<Journey> getAllJourney();
+    List<Journey> getAllJourneys();
 
     Journey getJourneyById(Long id);
 
@@ -13,5 +13,5 @@ public interface JourneyService {
 
     Journey updateJourneyById(Long id, Journey journey);
 
-    Journey deleteJourneyById(Long id);
+    void deleteJourneyById(Long id);
 }
