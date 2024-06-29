@@ -38,7 +38,6 @@ public class JourneyServiceImpl implements JourneyService {
     @Override
     public Journey addNewJourney(Journey journey) {
         //Notify will be boolean and default false
-        //LeaveTime is optional and can be null
         if (journey.getOrigin() == null || journey.getDestination() == null || journey.getDays() == null || journey.getDepartureTime() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incomplete info");
         }
@@ -47,11 +46,7 @@ public class JourneyServiceImpl implements JourneyService {
 
     @Override
     public Journey updateJourneyById(Long id, Journey journey) {
-        Optional<Journey> journeyOptional = this.journeyRepository.findById(id);
-        if (journeyOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid ID_UPDATE");
-        }
-        Journey journeyToUpdate = journeyOptional.get();
+        Journey journeyToUpdate = getJourneyById(id);
         if (journey.getOrigin() != null) {
             journeyToUpdate.setOrigin(journey.getOrigin());
         }
