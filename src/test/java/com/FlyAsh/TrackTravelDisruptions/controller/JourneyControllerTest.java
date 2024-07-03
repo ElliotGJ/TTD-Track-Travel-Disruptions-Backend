@@ -67,8 +67,8 @@ class JourneyControllerTest {
         journey1 = new Journey(1L, true, "Origin 1", "Destination 1", days, "08:00 AM", journeyLegs);
         journey2 = new Journey(2L, false, "Origin 2", "Destination 2", days, "09:00 AM", journeyLegs);
         days = new HashSet<>(Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
-        journeyLeg1 = new JourneyLeg(1L, "Oxford", "Reading", 1, nationalRail, null);
-        journeyLeg2 = new JourneyLeg(2L, "Reading", "Paddington", 2, nationalRail, null);
+        journeyLeg1 = new JourneyLeg(1L, "Oxford", "OXF", "Reading", "RDG", 1, nationalRail, null);
+        journeyLeg2 = new JourneyLeg(2L, "Reading", "RDG", "Paddington", "PAD", 2, nationalRail, null);
         journeyLegs = new HashSet<>(Arrays.asList(journeyLeg1, journeyLeg2));
         nationalRail = new TransportProvider(1L, "National Rail", "https://www.nationalrail.co.uk/", null);
         transportForLondon = new TransportProvider(2L, "Transport for London", "https://tfl.gov.uk/", null);

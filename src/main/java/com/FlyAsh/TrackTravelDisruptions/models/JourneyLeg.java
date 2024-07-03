@@ -22,8 +22,14 @@ public class JourneyLeg {
     @Column(nullable = false)
     private String origin;
 
+    @Column
+    private String originCRS;
+
     @Column(nullable = false)
     private String destination;
+
+    @Column
+    private String destinationCRS;
 
     @Column(nullable = false)
     private int legOrder;
