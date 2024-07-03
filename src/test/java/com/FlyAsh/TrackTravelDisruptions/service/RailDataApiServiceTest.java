@@ -9,9 +9,9 @@ class RailDataApiServiceTest {
 
 
     @Test
-    void callThirdPartyAPI() {
+    void getNextFastestServiceBetween() {
         RailDataApiService railDataApiService = new RailDataApiService();
-        RailDataDTO railDataDTO = railDataApiService.callThirdPartyAPI("https://api1.raildata.org.uk/1010-live-fastest-departures/LDBWS/api/20220120/GetFastestDeparturesWithDetails/BHM/RDG");
+        RailDataDTO railDataDTO = railDataApiService.getNextFastestServiceBetween("BHM", "EUS");
         System.out.println(railDataDTO.toString());
         System.out.println(railDataDTO.destinationStationCrs);
     }

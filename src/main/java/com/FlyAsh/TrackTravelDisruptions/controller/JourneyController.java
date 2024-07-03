@@ -1,5 +1,6 @@
 package com.FlyAsh.TrackTravelDisruptions.controller;
 
+import com.FlyAsh.TrackTravelDisruptions.dto.JourneyDTOWithRailDataDTO;
 import com.FlyAsh.TrackTravelDisruptions.models.Journey;
 import com.FlyAsh.TrackTravelDisruptions.service.RailDataApiService;
 import com.FlyAsh.TrackTravelDisruptions.service.JourneyServiceImpl;
@@ -28,7 +29,7 @@ public class JourneyController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Journey> getJourneyById(@PathVariable Long id) {
+    public ResponseEntity<JourneyDTOWithRailDataDTO> getJourneyById(@PathVariable Long id) {
         Journey result = journeyServiceImpl.getJourneyById(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

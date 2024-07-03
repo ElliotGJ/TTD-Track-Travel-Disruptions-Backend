@@ -6,7 +6,7 @@ import java.util.Set;
 
 public record JourneyDTO
         (
-                @NotBlank(message = "Journey name cannot be blank") String journeyName,
+                @NotBlank(message = "Journey name cannot be blank") long journeyId,
                 @NotBlank(message = "Origin cannot be blank") String origin,
                 @NotBlank(message = "Destination cannot be blank") String destination,
                 @NotBlank(message = "Departure time cannot be blank") String departureTime,

@@ -1,5 +1,8 @@
 package com.FlyAsh.TrackTravelDisruptions.service;
 
+import com.FlyAsh.TrackTravelDisruptions.dto.JourneyDTO;
+import com.FlyAsh.TrackTravelDisruptions.dto.JourneyDTOWithRailDataDTO;
+import com.FlyAsh.TrackTravelDisruptions.dto.Mapper;
 import com.FlyAsh.TrackTravelDisruptions.models.Journey;
 import com.FlyAsh.TrackTravelDisruptions.repositories.JourneyRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,6 +20,9 @@ public class JourneyServiceImpl implements JourneyService {
 
     @Autowired
     JourneyRepository journeyRepository;
+
+    @Autowired
+    RailDataApiService railDataApiService;
 
     @Override
     public List<Journey> getAllJourneys() {
@@ -71,4 +77,18 @@ public class JourneyServiceImpl implements JourneyService {
         Journey journey = getJourneyById(id);
         journeyRepository.delete(journey);
     }
+
+    @Override
+    public JourneyDTO getJourneyDTOById(Long id) {
+        Mapper.mapToJourneyDTO(getJourneyById(id));
+        railDataApiService.getRailDataDTOByJourneyId(id);
+        return null;
+    }
+
+    @Override
+    public JourneyDTOWithRailDataDTO getJourneyWithRailDataDTOById(Long id) {
+        return null;
+    }
+
+
 }
