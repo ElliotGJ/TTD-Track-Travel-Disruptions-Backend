@@ -1,5 +1,8 @@
 package com.FlyAsh.TrackTravelDisruptions.controller;
 
+import com.FlyAsh.TrackTravelDisruptions.dto.JourneyDTO;
+import com.FlyAsh.TrackTravelDisruptions.dto.JourneyDTOWithRailDataDTO;
+import com.FlyAsh.TrackTravelDisruptions.dto.RailDataDTO;
 import com.FlyAsh.TrackTravelDisruptions.models.Journey;
 import com.FlyAsh.TrackTravelDisruptions.models.JourneyLeg;
 import com.FlyAsh.TrackTravelDisruptions.models.TransportProvider;
@@ -15,21 +18,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,6 +47,8 @@ class JourneyControllerTest {
     private ObjectMapper mapper;
 
     private Journey journey1;
+    private JourneyDTO journey1Dto;
+    private JourneyDTOWithRailDataDTO journeyDTOWithRailDataDTO;
     private Journey journey2;
     Set<DayOfWeek> days;
     JourneyLeg journeyLeg1;
@@ -64,14 +63,17 @@ class JourneyControllerTest {
         mockMvcController = MockMvcBuilders.standaloneSetup(journeyController).build();
         mapper = new ObjectMapper();
 
-        journey1 = new Journey(1L, true, "Origin 1", "Destination 1", days, "08:00 AM", journeyLegs);
-        journey2 = new Journey(2L, false, "Origin 2", "Destination 2", days, "09:00 AM", journeyLegs);
+        journey1Dto = new JourneyDTO(1L,"OXF", "PAD", "08:00 AM", days, true);
+
+        journey1 = new Journey(1L, true, "Origin 1", "Destination 1", 1L, days, "08:00 AM", journeyLegs);
+        journey2 = new Journey(2L, false, "Origin 2", "Destination 2", 2L, days, "09:00 AM", journeyLegs);
         days = new HashSet<>(Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
         journeyLeg1 = new JourneyLeg(1L, "Oxford", "OXF", "Reading", "RDG", 1, nationalRail, null);
         journeyLeg2 = new JourneyLeg(2L, "Reading", "RDG", "Paddington", "PAD", 2, nationalRail, null);
         journeyLegs = new HashSet<>(Arrays.asList(journeyLeg1, journeyLeg2));
         nationalRail = new TransportProvider(1L, "National Rail", "https://www.nationalrail.co.uk/", null);
         transportForLondon = new TransportProvider(2L, "Transport for London", "https://tfl.gov.uk/", null);
+        journeyDTOWithRailDataDTO = new JourneyDTOWithRailDataDTO(journey1Dto, null);
     }
 
     @Test
@@ -88,8 +90,8 @@ class JourneyControllerTest {
                         MockMvcRequestBuilders.get("/api/v1/journey"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].origin").value("Origin 1"))
-                .andExpect(jsonPath("$[1].destination").value("Destination 2"))
+                .andExpect(jsonPath("$[0].originCRS").value("Origin 1"))
+                .andExpect(jsonPath("$[1].destinationCRS").value("Destination 2"))
                 .andExpect(jsonPath("$[1].departureTime").value("09:00 AM"));
 
         verify(mockJourneyServiceImpl, times(1)).getAllJourneys();
@@ -98,22 +100,22 @@ class JourneyControllerTest {
 
     @Test
     @DisplayName("GetJourneyByIdTest")
-    void getJourneyById() throws Exception {
-        when(mockJourneyServiceImpl.getJourneyById(1L)).thenReturn(journey1);
+    void getJourneysWithRailDataByUserId() throws Exception {
+        when(mockJourneyServiceImpl.getJourneysWithRailDataByUserId(1L)).thenReturn(Collections.singletonList(journeyDTOWithRailDataDTO));
 
         mockMvcController.perform(MockMvcRequestBuilders.get("/api/v1/journey/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.origin").value("Origin 1"))
-                .andExpect(jsonPath("$.destination").value("Destination 1"))
-                .andExpect(jsonPath("$.departureTime").value("08:00 AM"));
+                .andExpect(jsonPath("$[0].journeyDTO.userId").value(1L))
+                .andExpect(jsonPath("$[0].journeyDTO.originCRS").value("OXF"))
+                .andExpect(jsonPath("$[0].journeyDTO.destinationCRS").value("PAD"))
+                .andExpect(jsonPath("$[0].journeyDTO.departureTime").value("08:00 AM"));
 
     }
 
     @Test
     @DisplayName("AddNewJourneyTest")
     public void addNewJourneyTest() throws Exception {
-        Journey journey3 = new Journey(3L, true, "Origin 3", "Destination 3", days, "11:00 AM", journeyLegs);
+        Journey journey3 = new Journey(3L, true, "Origin 3", "Destination 3", 3L, days, "11:00 AM", journeyLegs);
 
         when(mockJourneyServiceImpl.addNewJourney(journey3)).thenReturn(journey3);
 
@@ -126,17 +128,17 @@ class JourneyControllerTest {
     @Test
     @DisplayName("UpdateJourneyById")
     public void updateJourneyByIdTest() throws Exception {
-      Journey updatedJourney = new Journey(1L, false, "Origin 4", "Destination 4", days, "09:00 AM", journeyLegs);
+      Journey updatedJourney = new Journey(1L, false, "Origin 4", "Destination 4", 4L, days, "09:00 AM", journeyLegs);
 
         when(mockJourneyServiceImpl.updateJourneyById(any(Long.class), any(Journey.class))).thenReturn(updatedJourney);
 
-        mockMvcController.perform(MockMvcRequestBuilders.put("/api/v1/journey/3")
+        mockMvcController.perform(MockMvcRequestBuilders.put("/api/v1/journey/4")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(journey1)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(updatedJourney.getId()))
-                .andExpect(jsonPath("$.origin").value(updatedJourney.getOrigin()))
-                .andExpect(jsonPath("$.destination").value(updatedJourney.getDestination()));
+                .andExpect(jsonPath("$.originCRS").value(updatedJourney.getOriginCRS()))
+                .andExpect(jsonPath("$.destinationCRS").value(updatedJourney.getDestinationCRS()));
     }
 
     @Test
@@ -149,7 +151,7 @@ class JourneyControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(journey1)))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof ResponseStatusException))
+                .andExpect(result -> assertInstanceOf(ResponseStatusException.class, result.getResolvedException()))
                 .andExpect(result -> assertEquals("404 NOT_FOUND \"Invalid ID_UPDATE\"", result.getResolvedException().getMessage()));
     }
 

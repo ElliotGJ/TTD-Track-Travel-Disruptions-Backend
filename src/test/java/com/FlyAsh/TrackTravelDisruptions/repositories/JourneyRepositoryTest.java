@@ -30,8 +30,8 @@ class JourneyRepositoryTest {
 
         Journey journey = new Journey();
         journey.setId(1L);
-        journey.setOrigin("Oxford");
-        journey.setDestination("Piccadilly Circus");
+        journey.setOriginCRS("Oxford");
+        journey.setDestinationCRS("Piccadilly Circus");
         journey.setDepartureTime("8:00");
         JourneyLeg leg1 = new JourneyLeg(1L, "Oxford", "OXF", "Reading", "RDG", 1, nationalRail, null);
         JourneyLeg leg2 = new JourneyLeg(2L, "Reading", "RDG", "Paddington", "PAD", 2, nationalRail, null);
@@ -49,7 +49,7 @@ class JourneyRepositoryTest {
 
         Journey result = journeyRepository.findById(1L).get();
 
-        assertThat(result.getDestination()).isEqualTo(journey.getDestination());
+        assertThat(result.getDestinationCRS()).isEqualTo(journey.getDestinationCRS());
         assertThat(result.getJourneyLegs().size()).isEqualTo(3);
         assertThat(result.getJourneyLegs().iterator().next().getTransportProvider().getName()).isEqualTo(nationalRail.getName());
     }

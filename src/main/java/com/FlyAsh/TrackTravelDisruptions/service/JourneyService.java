@@ -19,5 +19,7 @@ public interface JourneyService {
 
     JourneyDTO getJourneyDTOById(Long id);
 
-    JourneyDTOWithRailDataDTO getJourneyWithRailDataDTOById(Long id);
+    List<JourneyDTOWithRailDataDTO> getJourneysWithRailDataByUserId(Long id);
+
+    List<Journey> getJourneysByUserId(Long userId);
 }

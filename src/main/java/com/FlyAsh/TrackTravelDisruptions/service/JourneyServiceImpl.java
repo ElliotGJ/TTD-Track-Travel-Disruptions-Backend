@@ -7,9 +7,7 @@ import com.FlyAsh.TrackTravelDisruptions.models.Journey;
 import com.FlyAsh.TrackTravelDisruptions.repositories.JourneyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,22 +40,31 @@ public class JourneyServiceImpl implements JourneyService {
     }
 
     @Override
+    public List<Journey> getJourneysByUserId(Long id) {
+        List<Journey> journeyList = new ArrayList<>();
+        journeyRepository.findAll().forEach(journeyList::add);
+        if (journeyList.isEmpty()) {
+            throw new EntityNotFoundException("No journeys found for user with ID: " + id);
+        }
+        return journeyList;
+    }
+
+    @Override
     public Journey addNewJourney(Journey journey) {
         //Notify will be boolean and default false
-        if (journey.getOrigin() == null || journey.getDestination() == null || journey.getDays() == null || journey.getDepartureTime() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incomplete info");
-        }
+        journey.getJourneyLegs().forEach(journeyLeg -> journeyLeg.setJourney(journey));
+
         return journeyRepository.save(journey);
     }
 
     @Override
     public Journey updateJourneyById(Long id, Journey journey) {
         Journey journeyToUpdate = getJourneyById(id);
-        if (journey.getOrigin() != null) {
-            journeyToUpdate.setOrigin(journey.getOrigin());
+        if (journey.getOriginCRS() != null) {
+            journeyToUpdate.setOriginCRS(journey.getOriginCRS());
         }
-        if (journey.getDestination() != null) {
-            journeyToUpdate.setDestination(journey.getDestination());
+        if (journey.getDestinationCRS() != null) {
+            journeyToUpdate.setDestinationCRS(journey.getDestinationCRS());
         }
         if (journey.getDays() != null) {
             journeyToUpdate.setDays(journey.getDays());
@@ -80,14 +87,16 @@ public class JourneyServiceImpl implements JourneyService {
 
     @Override
     public JourneyDTO getJourneyDTOById(Long id) {
-        Mapper.mapToJourneyDTO(getJourneyById(id));
-        railDataApiService.getRailDataDTOByJourneyId(id);
-        return null;
+        return Mapper.mapToJourneyDTO(getJourneyById(id));
     }
 
+
     @Override
-    public JourneyDTOWithRailDataDTO getJourneyWithRailDataDTOById(Long id) {
-        return null;
+    public List<JourneyDTOWithRailDataDTO> getJourneysWithRailDataByUserId(Long id) {
+        List<Journey> journeys = getJourneysByUserId(id);
+        return journeys.stream().map(journey ->
+            Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS()))
+        ).toList();
     }
 
 

@@ -41,8 +41,8 @@ class JourneyServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        journey1 = new Journey(1L, true, "Origin 1", "Destination 1", days, "08:00 AM", journeyLegs);
-        journey2 = new Journey(2L, false, "Origin 2", "Destination 2", days, "09:00 AM", journeyLegs);
+        journey1 = new Journey(1L, true, "Origin 1", "Destination 1", 1L, days, "08:00 AM", journeyLegs);
+        journey2 = new Journey(2L, false, "Origin 2", "Destination 2", 2L, days, "09:00 AM", journeyLegs);
         days = new HashSet<>(Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY));
         journeyLeg1 = new JourneyLeg(1L, "Oxford", "OXF",  "Reading", "RDG", 1, nationalRail, null);
         journeyLeg2 = new JourneyLeg(2L, "Reading", "RDG", "Paddington", "PAD", 2, nationalRail, null);
@@ -95,7 +95,7 @@ class JourneyServiceImplTest {
     @Test
     void addNewJounery() {
 
-        Journey journey3 = new Journey(3L, true, "Origin 3", "Destination 3", days, "21:00 PM", journeyLegs);
+        Journey journey3 = new Journey(3L, true, "Origin 3", "Destination 3", 3L, days, "21:00 PM", journeyLegs);
         when(mockJourneyRepository.save(journey3)).thenReturn(journey3);
         // Act
 
@@ -112,7 +112,7 @@ class JourneyServiceImplTest {
     void testUpdateJourneyById_Success() {
         // Arrange
         Long journeyId = 1L;
-        Journey updateJourney = new Journey(1L, true, "NewOrigin 1", "NewDestination 1", days, "21:00 PM", journeyLegs);
+        Journey updateJourney = new Journey(1L, true, "NewOrigin 1", "NewDestination 1", 1L, days, "21:00 PM", journeyLegs);
         when(mockJourneyRepository.findById(journeyId)).thenReturn(Optional.of(journey1));
         when(mockJourneyRepository.save(any(Journey.class))).thenReturn(updateJourney);
 
@@ -120,8 +120,8 @@ class JourneyServiceImplTest {
         Journey updatedJourney = journeyService.updateJourneyById(journeyId, updateJourney);
 
         // Assert
-        assertEquals("NewOrigin 1", updatedJourney.getOrigin());
-        assertEquals("NewDestination 1", updatedJourney.getDestination());
+        assertEquals("NewOrigin 1", updatedJourney.getOriginCRS());
+        assertEquals("NewDestination 1", updatedJourney.getDestinationCRS());
         assertEquals("21:00 PM", updatedJourney.getDepartureTime());
         assertTrue(updatedJourney.getNotificationsEnabled());
         verify(mockJourneyRepository, times(1)).findById(journeyId);
@@ -131,8 +131,8 @@ class JourneyServiceImplTest {
         verify(mockJourneyRepository, times(1)).save(journeyArgumentCaptor.capture());
         Journey capturedJourney = journeyArgumentCaptor.getValue();
         //to verify what send to the repository
-        assertEquals("NewOrigin 1", capturedJourney.getOrigin());
-        assertEquals("NewDestination 1", capturedJourney.getDestination());
+        assertEquals("NewOrigin 1", capturedJourney.getOriginCRS());
+        assertEquals("NewDestination 1", capturedJourney.getDestinationCRS());
         assertEquals("21:00 PM", capturedJourney.getDepartureTime());
         assertTrue(capturedJourney.getNotificationsEnabled());
     }

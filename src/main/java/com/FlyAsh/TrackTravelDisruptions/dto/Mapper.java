@@ -8,9 +8,9 @@ public class Mapper {
 
     public static JourneyDTO mapToJourneyDTO(Journey journey) {
         return new JourneyDTO(
-                journey.getId(),
-                journey.getOrigin(),
-                journey.getDestination(),
+                journey.getUserId(),
+                journey.getOriginCRS(),
+                journey.getDestinationCRS(),
                 journey.getDepartureTime(),
                 journey.getDays(),
                 journey.getNotificationsEnabled()
@@ -19,8 +19,8 @@ public class Mapper {
 
     public static JourneyDTOWithRailDataDTO mapToJourneyDTOWithRailDataDTO(Journey journey, RailDataDTO railDataDTO) {
         return new JourneyDTOWithRailDataDTO(
-                mapToJourneyDTO(journey),
-                railDataDTO
+                mapToJourneyDTO(journey), railDataDTO
         );
     }
+
 }

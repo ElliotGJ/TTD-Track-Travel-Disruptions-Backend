@@ -2,7 +2,6 @@ package com.FlyAsh.TrackTravelDisruptions.controller;
 
 import com.FlyAsh.TrackTravelDisruptions.dto.JourneyDTOWithRailDataDTO;
 import com.FlyAsh.TrackTravelDisruptions.models.Journey;
-import com.FlyAsh.TrackTravelDisruptions.service.RailDataApiService;
 import com.FlyAsh.TrackTravelDisruptions.service.JourneyServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,6 @@ public class JourneyController {
     @Autowired
     JourneyServiceImpl journeyServiceImpl;
 
-    @Autowired
-    private RailDataApiService railDataApiService;
-
     @GetMapping
     public ResponseEntity<List<Journey>> getAllJourneys() {
         return new ResponseEntity<>(journeyServiceImpl.getAllJourneys(), HttpStatus.OK);
@@ -29,19 +25,9 @@ public class JourneyController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<JourneyDTOWithRailDataDTO> getJourneyById(@PathVariable Long id) {
-        Journey result = journeyServiceImpl.getJourneyById(id);
-        return new ResponseEntity<>(result, HttpStatus.OK);
+    public ResponseEntity<List<JourneyDTOWithRailDataDTO>> getJourneysWithRailDataByUserId(@PathVariable Long id) {
+        return new ResponseEntity<>(journeyServiceImpl.getJourneysWithRailDataByUserId(id), HttpStatus.OK);
     }
-
-//    @GetMapping("/report/{departure}/{destination}")
-//    public ExternalApiResponseDTO getDepartures(@PathVariable String departure, @PathVariable String destination) {
-//        try {
-//            return externalApiService.getNextDeparturesWithDetails(departure, destination);
-//        } catch (IOException e) {
-//            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error fetching departures", e);
-//        }
-//    }
 
     @PostMapping
     public ResponseEntity<Journey> addNewJourney(@RequestBody Journey journey) {
