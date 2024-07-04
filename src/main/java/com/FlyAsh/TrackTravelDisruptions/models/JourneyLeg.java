@@ -1,5 +1,6 @@
 package com.FlyAsh.TrackTravelDisruptions.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,6 +39,7 @@ public class JourneyLeg {
     private TransportProvider transportProvider;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonBackReference
     private Journey journey;
 
 }
