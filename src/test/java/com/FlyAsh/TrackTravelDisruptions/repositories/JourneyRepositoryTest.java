@@ -30,13 +30,13 @@ class JourneyRepositoryTest {
 
         Journey journey = new Journey();
         journey.setId(1L);
-        journey.setOrigin("Oxford");
-        journey.setDestination("Piccadilly Circus");
+        journey.setOriginCRS("Oxford");
+        journey.setDestinationCRS("Piccadilly Circus");
         journey.setDepartureTime("8:00");
-        JourneyLeg leg1 = new JourneyLeg(1L, "Oxford", "Reading", nationalRail, null);
-        JourneyLeg leg2 = new JourneyLeg(2L, "Reading", "Paddington", nationalRail, null);
+        JourneyLeg leg1 = new JourneyLeg(1L, "Oxford", "OXF", "Reading", "RDG", 1, nationalRail, null);
+        JourneyLeg leg2 = new JourneyLeg(2L, "Reading", "RDG", "Paddington", "PAD", 2, nationalRail, null);
         nationalRail.setJourneyLegs(Set.of(leg1, leg2));
-        JourneyLeg leg3 = new JourneyLeg(3L, "Paddington", "Piccadilly Circus", transportForLondon, null);
+        JourneyLeg leg3 = new JourneyLeg(3L, "Paddington", "PAD", "Piccadilly Circus", "TES", 3, transportForLondon, null);
         transportForLondon.setJourneyLegs(Set.of(leg3));
         journey.setJourneyLegs(Set.of(leg1, leg2, leg3));
         journey.setNotificationsEnabled(true);
@@ -49,7 +49,7 @@ class JourneyRepositoryTest {
 
         Journey result = journeyRepository.findById(1L).get();
 
-        assertThat(result.getDestination()).isEqualTo(journey.getDestination());
+        assertThat(result.getDestinationCRS()).isEqualTo(journey.getDestinationCRS());
         assertThat(result.getJourneyLegs().size()).isEqualTo(3);
         assertThat(result.getJourneyLegs().iterator().next().getTransportProvider().getName()).isEqualTo(nationalRail.getName());
     }

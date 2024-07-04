@@ -26,10 +26,13 @@ public class Journey {
     private Boolean notificationsEnabled;
 
     @Column(nullable = false)
-    private String origin;
+    private String originCRS;
 
     @Column(nullable = false)
-    private String destination;
+    private String destinationCRS;
+
+    @Column(nullable = false)
+    private Long userId;
 
     @ElementCollection(targetClass = DayOfWeek.class)
     @Enumerated(EnumType.STRING)
