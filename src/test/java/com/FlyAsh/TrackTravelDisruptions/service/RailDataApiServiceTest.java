@@ -11,8 +11,7 @@ class RailDataApiServiceTest {
     @Test
     void getNextFastestServiceBetween() {
         RailDataApiService railDataApiService = new RailDataApiService();
-        RailDataDTO railDataDTO = railDataApiService.getNextFastestServiceBetween("BHM", "EUS");
+        RailDataDTO railDataDTO = railDataApiService.getNextFastestServiceBetween("NTA", "BHM");
         System.out.println(railDataDTO.toString());
-        System.out.println(railDataDTO.destinationStationCrs);
     }
 }

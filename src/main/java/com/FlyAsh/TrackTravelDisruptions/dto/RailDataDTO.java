@@ -1,18 +1,28 @@
 package com.FlyAsh.TrackTravelDisruptions.dto;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RailDataDTO {
-    public String destinationStationCrs;
-    public String generatedAt;
-    public String departureStation;
-    public String departureCrs;
-    public List<String> nrccMessages;
-    public Service service;
-    public String et;
-    public String st;
+    String generatedAt;
+    String departureStationCrs;
+    String departureStationName;
+    String destinationStationCrs;
+    String destinationStationName;
+    String etd;
+    String std;
+    String platform;
+    String eta;
+    String sta;
+    boolean isCancelled;
+    String cancelReason;
+    String delayReason;
+    String serviceID;
+    String affectedBy;
+    boolean filterLocationCancelled;
 
     public static class Departure {
         public Service service;
@@ -27,6 +37,7 @@ public class RailDataDTO {
         boolean isCancelled;
         boolean filterLocationCancelled;
         public String cancelReason;
+        public SubsequentCallingPoints.CallingPoint dest;
         public String delayReason;
         public String adhocAlerts;
         public String serviceID;
@@ -51,6 +62,7 @@ public class RailDataDTO {
         public static class SubsequentCallingPoints {
             public List<CallingPoint> callingPoint;
 
+            @Getter
             private static class CallingPoint {
                 public String crs;
                 public String locationName;
@@ -66,33 +78,46 @@ public class RailDataDTO {
     }
 
     public RailDataDTO(List<Departure> departures, String generatedAt, String locationName, String crs, List<NrccMessage> nrccMessages) {
-        this.destinationStationCrs = departures.getFirst().crs;
+        Service service = departures.getFirst().service;
         this.generatedAt = generatedAt;
-        this.departureStation = locationName;
-        this.departureCrs = crs;
-        departures.getFirst().service.subsequentCallingPoints.getFirst().callingPoint.stream().filter(callingPoint -> callingPoint.crs.equals(destinationStationCrs)).findAny().ifPresent(callingPoint -> this.st = callingPoint.st);
-        departures.getFirst().service.subsequentCallingPoints.getFirst().callingPoint.stream().filter(callingPoint -> callingPoint.crs.equals(destinationStationCrs)).findAny().ifPresent(callingPoint -> this.et = callingPoint.et);
-        if (nrccMessages != null) {
-            this.nrccMessages = nrccMessages.stream().map(nrccMessage -> nrccMessage.value).collect(Collectors.toList());
-            this.service = departures.getFirst().service;
-        } else {
-            this.nrccMessages = new ArrayList<>();
-            this.service = departures.getFirst().service;
-        }
+        this.departureStationName = locationName;
+        this.departureStationCrs = crs;
+        this.destinationStationCrs = departures.getFirst().crs;
+        Service.SubsequentCallingPoints.CallingPoint dest = service.subsequentCallingPoints.getFirst().callingPoint.stream().filter(callingPoint -> callingPoint.crs.equals(destinationStationCrs)).findAny().get();
+        this.destinationStationName = dest.locationName;
+        this.etd = service.etd;
+        this.std = service.std;
+        this.platform = service.platform;
+        this.eta = dest.et;
+        this.sta = dest.st;
+        this.isCancelled = service.isCancelled;
+        this.cancelReason = service.cancelReason;
+        this.delayReason = service.delayReason;
+        this.serviceID = service.serviceID;
+        this.affectedBy = service.affectedBy;
+        this.filterLocationCancelled = dest.isCancelled;
     }
 
 
     @Override
     public String toString() {
         return "RailDataDTO{" +
-                "destinationStationCrs='" + destinationStationCrs + '\'' +
-                ", generatedAt='" + generatedAt + '\'' +
-                ", departureStation='" + departureStation + '\'' +
-                ", departureCrs='" + departureCrs + '\'' +
-                ", nrccMessages=" + nrccMessages +
-                ", service=" + service +
-                ", et='" + et + '\'' +
-                ", st='" + st + '\'' +
+                "generatedAt='" + generatedAt + '\'' +
+                ", departureStationCrs='" + departureStationCrs + '\'' +
+                ", departureStationName='" + departureStationName + '\'' +
+                ", destinationStationCrs='" + destinationStationCrs + '\'' +
+                ", destinationStationName='" + destinationStationName + '\'' +
+                ", etd='" + etd + '\'' +
+                ", std='" + std + '\'' +
+                ", platform='" + platform + '\'' +
+                ", eta='" + eta + '\'' +
+                ", sta='" + sta + '\'' +
+                ", isCancelled=" + isCancelled +
+                ", cancelReason='" + cancelReason + '\'' +
+                ", delayReason='" + delayReason + '\'' +
+                ", serviceID='" + serviceID + '\'' +
+                ", affectedBy='" + affectedBy + '\'' +
+                ", filterLocationCancelled=" + filterLocationCancelled +
                 '}';
     }
 }
