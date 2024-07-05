@@ -1,5 +1,6 @@
 package com.FlyAsh.TrackTravelDisruptions.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,6 +45,7 @@ public class Journey {
     private String departureTime;
 
     @OneToMany(mappedBy = "journey", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<JourneyLeg> journeyLegs;
 
 }
