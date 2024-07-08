@@ -22,4 +22,6 @@ public interface JourneyService {
     List<JourneyDTOWithRailDataDTO> getJourneysWithRailDataByUserId(Long id);
 
     List<Journey> getJourneysByUserId(Long userId);
+
+    JourneyDTOWithRailDataDTO getJourneyWithRailDataByUserIdAndJourneyId(Long userId, Long journeyId);
 }

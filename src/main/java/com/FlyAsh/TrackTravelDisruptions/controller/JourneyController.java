@@ -29,6 +29,7 @@ public class JourneyController {
         return new ResponseEntity<>(journeyServiceImpl.getJourneysWithRailDataByUserId(id), HttpStatus.OK);
     }
 
+
     @PostMapping
     public ResponseEntity<Journey> addNewJourney(@RequestBody Journey journey) {
         Journey result = journeyServiceImpl.addNewJourney(journey);
@@ -45,5 +46,12 @@ public class JourneyController {
     public ResponseEntity<String> deleteJourneyById(@PathVariable Long id) {
         journeyServiceImpl.deleteJourneyById(id);
         return new ResponseEntity<>("Journey Deleted", HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/{userId}/journey/{journeyId}")
+    public ResponseEntity<JourneyDTOWithRailDataDTO> getJourneyWithRailDataByUserIdAndJourneyId(
+            @PathVariable Long userId, @PathVariable Long journeyId) {
+        JourneyDTOWithRailDataDTO result = journeyServiceImpl.getJourneyWithRailDataByUserIdAndJourneyId(userId, journeyId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
