@@ -54,4 +54,14 @@ public class JourneyController {
         JourneyDTOWithRailDataDTO result = journeyServiceImpl.getJourneyWithRailDataByUserIdAndJourneyId(userId, journeyId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PostMapping("/validate")
+    public ResponseEntity<Void> validateJourney(@RequestBody Journey journey){
+        boolean isValid = journeyServiceImpl.validateJourney(journey);
+        if(isValid){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

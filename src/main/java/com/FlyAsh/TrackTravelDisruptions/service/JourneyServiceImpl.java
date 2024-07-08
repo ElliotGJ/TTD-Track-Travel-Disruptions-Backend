@@ -106,4 +106,13 @@ public class JourneyServiceImpl implements JourneyService {
 
         return Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS()));
     }
+
+    public boolean validateJourney(Journey journey) {
+        try{
+            railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS());
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
 }
