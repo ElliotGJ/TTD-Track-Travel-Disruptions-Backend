@@ -51,12 +51,7 @@ public class JourneyServiceImpl implements JourneyService {
 
     @Override
     public Journey addNewJourney(Journey journey) {
-        //Notify will be boolean and default false
-
-        System.out.println("Adding journey: " + journey.toString());
-
         journey.getJourneyLegs().forEach(journeyLeg -> journeyLeg.setJourney(journey));
-        System.out.println("Journey added: " + journey.toString());
         return journeyRepository.save(journey);
     }
 
@@ -98,7 +93,7 @@ public class JourneyServiceImpl implements JourneyService {
     public List<JourneyDTOWithRailDataDTO> getJourneysWithRailDataByUserId(Long id) {
         List<Journey> journeys = getJourneysByUserId(id);
         return journeys.stream().map(journey ->
-            Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS()))
+                Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS()))
         ).toList();
     }
 
