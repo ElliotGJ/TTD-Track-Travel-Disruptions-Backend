@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URL;
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +34,7 @@ class JourneyRepositoryTest {
         journey.setId(1L);
         journey.setOriginCRS("Oxford");
         journey.setDestinationCRS("Piccadilly Circus");
-        journey.setDepartureTime("8:00");
+        journey.setDepartureTime(LocalTime.parse("08:00"));
         JourneyLeg leg1 = new JourneyLeg(1L, "Oxford", "OXF", "Reading", "RDG", 1, nationalRail, null);
         JourneyLeg leg2 = new JourneyLeg(2L, "Reading", "RDG", "Paddington", "PAD", 2, nationalRail, null);
         nationalRail.setJourneyLegs(Set.of(leg1, leg2));

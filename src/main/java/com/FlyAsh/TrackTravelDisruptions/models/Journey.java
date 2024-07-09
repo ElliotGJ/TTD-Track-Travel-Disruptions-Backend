@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
@@ -42,7 +44,7 @@ public class Journey {
     private Set<DayOfWeek> days;
 
     @Column(nullable = false)
-    private String departureTime;
+    private LocalTime departureTime;
 
     @OneToMany(mappedBy = "journey", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

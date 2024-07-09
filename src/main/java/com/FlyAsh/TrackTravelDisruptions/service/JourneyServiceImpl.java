@@ -9,6 +9,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +46,7 @@ public class JourneyServiceImpl implements JourneyService {
     @Override
     public List<Journey> getJourneysByUserId(Long id) {
         List<Journey> journeyList = new ArrayList<>();
-        journeyRepository.findAll().forEach(journeyList::add);
+        journeyRepository.findAllByUserId(id).forEach(journeyList::add);
         if (journeyList.isEmpty()) {
             throw new EntityNotFoundException("No journeys found for user with ID: " + id);
         }
@@ -52,6 +56,8 @@ public class JourneyServiceImpl implements JourneyService {
     @Override
     public Journey addNewJourney(Journey journey) {
         journey.getJourneyLegs().forEach(journeyLeg -> journeyLeg.setJourney(journey));
+        journey.getJourneyLegs().forEach(journeyLeg -> railDataApiService.getNextFastestServiceBetween(journeyLeg.getOriginCRS(), journeyLeg.getDestinationCRS(), 0));
+
         return journeyRepository.save(journey);
     }
 
@@ -74,6 +80,7 @@ public class JourneyServiceImpl implements JourneyService {
             journeyToUpdate.setDepartureTime(journey.getDepartureTime());
         }
 
+        railDataApiService.getNextFastestServiceBetween(journeyToUpdate.getOriginCRS(), journeyToUpdate.getDestinationCRS(), 0);
         return this.journeyRepository.save(journeyToUpdate);
     }
 
@@ -92,8 +99,15 @@ public class JourneyServiceImpl implements JourneyService {
     @Override
     public List<JourneyDTOWithRailDataDTO> getJourneysWithRailDataByUserId(Long id) {
         List<Journey> journeys = getJourneysByUserId(id);
-        return journeys.stream().map(journey ->
-                Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS()))
+        return journeys.stream().map(journey -> {
+                    long timeOffset = ChronoUnit.MINUTES.between(LocalTime.now(), journey.getDepartureTime());
+
+                    if (timeOffset > 0 && timeOffset < 120 && journey.getDays().contains(DayOfWeek.from(LocalDateTime.now().plusMinutes(timeOffset)))) {
+                        return Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS(), timeOffset));
+                    }
+                    return Mapper.mapToJourneyDTOWithRailDataDTO(journey, null);
+
+                }
         ).toList();
     }
 
