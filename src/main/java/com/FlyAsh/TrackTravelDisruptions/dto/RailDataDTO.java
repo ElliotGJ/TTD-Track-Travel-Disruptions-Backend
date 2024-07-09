@@ -26,6 +26,7 @@ public class RailDataDTO {
     String delayReason;
     String serviceID;
     String affectedBy;
+    String operator;
     boolean filterLocationCancelled;
 
     public static class Departure {
@@ -44,6 +45,7 @@ public class RailDataDTO {
         public SubsequentCallingPoints.CallingPoint dest;
         public String delayReason;
         public String adhocAlerts;
+        public String operator;
         public String serviceID;
         public String affectedBy;
 
@@ -60,6 +62,7 @@ public class RailDataDTO {
                     ", adhocAlerts='" + adhocAlerts + '\'' +
                     ", serviceID='" + serviceID + '\'' +
                     ", affectedBy='" + affectedBy + '\'' +
+                    ", operator='" + operator + '\'' +
                     '}';
         }
 
@@ -103,6 +106,7 @@ public class RailDataDTO {
         this.serviceID = service.serviceID;
         this.affectedBy = service.affectedBy;
         this.filterLocationCancelled = dest.isCancelled;
+        this.operator = service.operator;
     }
 
 
