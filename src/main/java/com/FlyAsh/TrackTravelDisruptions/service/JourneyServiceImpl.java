@@ -57,6 +57,7 @@ public class JourneyServiceImpl implements JourneyService {
     public Journey addNewJourney(Journey journey) {
         journey.getJourneyLegs().forEach(journeyLeg -> journeyLeg.setJourney(journey));
         journey.getJourneyLegs().forEach(journeyLeg -> railDataApiService.getNextFastestServiceBetween(journeyLeg.getOriginCRS(), journeyLeg.getDestinationCRS(), 0));
+
         return journeyRepository.save(journey);
     }
 
