@@ -79,6 +79,7 @@ public class JourneyServiceImpl implements JourneyService {
             journeyToUpdate.setDepartureTime(journey.getDepartureTime());
         }
 
+        railDataApiService.getNextFastestServiceBetween(journeyToUpdate.getOriginCRS(), journeyToUpdate.getDestinationCRS(), 0);
         return this.journeyRepository.save(journeyToUpdate);
     }
 
