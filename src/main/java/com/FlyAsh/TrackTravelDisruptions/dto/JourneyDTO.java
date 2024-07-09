@@ -8,6 +8,7 @@ import java.util.Set;
 
 public record JourneyDTO
         (
+                Long id,
                 @NotNull(message = "UserId cannot be null") Long userId,
                 @NotBlank(message = "OriginCRS cannot be blank") String originCRS,
                 @NotBlank(message = "DestinationCRS cannot be blank") String destinationCRS,

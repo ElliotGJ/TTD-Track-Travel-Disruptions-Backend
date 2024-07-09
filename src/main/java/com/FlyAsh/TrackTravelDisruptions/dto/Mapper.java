@@ -8,6 +8,7 @@ public class Mapper {
 
     public static JourneyDTO mapToJourneyDTO(Journey journey) {
         return new JourneyDTO(
+                journey.getId(),
                 journey.getUserId(),
                 journey.getOriginCRS(),
                 journey.getDestinationCRS(),
