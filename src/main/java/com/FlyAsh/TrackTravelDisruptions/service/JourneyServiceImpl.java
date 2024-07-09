@@ -104,6 +104,6 @@ public class JourneyServiceImpl implements JourneyService {
         Journey journey = journeyRepository.findByIdAndUserId(journeyId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Journey not found with ID: " + journeyId + " for user with ID: " + userId));
 
-        return Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS()));
+        return Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS(), 0));
     }
 }
