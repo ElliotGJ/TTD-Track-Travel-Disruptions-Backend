@@ -4,11 +4,11 @@ import com.FlyAsh.TrackTravelDisruptions.dto.JourneyDTOWithRailDataDTO;
 import com.FlyAsh.TrackTravelDisruptions.models.Journey;
 import com.FlyAsh.TrackTravelDisruptions.service.JourneyServiceImpl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -17,6 +17,8 @@ public class JourneyController {
 
     @Autowired
     JourneyServiceImpl journeyServiceImpl;
+    @Autowired
+    ObjectMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<Journey>> getAllJourneys() {
