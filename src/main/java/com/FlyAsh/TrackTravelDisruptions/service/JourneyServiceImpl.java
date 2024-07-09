@@ -52,8 +52,11 @@ public class JourneyServiceImpl implements JourneyService {
     @Override
     public Journey addNewJourney(Journey journey) {
         //Notify will be boolean and default false
-        journey.getJourneyLegs().forEach(journeyLeg -> journeyLeg.setJourney(journey));
 
+        System.out.println("Adding journey: " + journey.toString());
+
+        journey.getJourneyLegs().forEach(journeyLeg -> journeyLeg.setJourney(journey));
+        System.out.println("Journey added: " + journey.toString());
         return journeyRepository.save(journey);
     }
 
