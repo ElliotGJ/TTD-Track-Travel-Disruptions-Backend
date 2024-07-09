@@ -9,6 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -98,7 +100,7 @@ public class JourneyServiceImpl implements JourneyService {
         return journeys.stream().map(journey -> {
                     long timeOffset = ChronoUnit.MINUTES.between(LocalTime.now(), journey.getDepartureTime());
 
-                    if (timeOffset > 0 && timeOffset < 120) {
+                    if (timeOffset > 0 && timeOffset < 120 && journey.getDays().contains(DayOfWeek.from(LocalDateTime.now().plusMinutes(timeOffset)))) {
                         return Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS(), timeOffset));
                     }
                     return Mapper.mapToJourneyDTOWithRailDataDTO(journey, null);

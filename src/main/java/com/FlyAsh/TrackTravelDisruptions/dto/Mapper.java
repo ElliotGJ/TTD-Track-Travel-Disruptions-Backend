@@ -19,8 +19,7 @@ public class Mapper {
 
     public static JourneyDTOWithRailDataDTO mapToJourneyDTOWithRailDataDTO(Journey journey, RailDataDTO railDataDTO) {
         return new JourneyDTOWithRailDataDTO(
-                mapToJourneyDTO(journey), railDataDTO
-        );
+                mapToJourneyDTO(journey), railDataDTO);
     }
 
 }
