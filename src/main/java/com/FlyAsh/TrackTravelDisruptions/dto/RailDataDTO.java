@@ -1,5 +1,6 @@
 package com.FlyAsh.TrackTravelDisruptions.dto;
 
+import com.FlyAsh.TrackTravelDisruptions.exceptions.NoJourneyFoundException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -82,6 +83,9 @@ public class RailDataDTO {
 
     public RailDataDTO(List<Departure> departures, String generatedAt, String locationName, String crs, List<NrccMessage> nrccMessages) {
         Service service = departures.getFirst().service;
+        if (service == null) {
+            throw new NoJourneyFoundException("No journey found from " + locationName + " to " + departures.getFirst().crs);
+        }
         this.generatedAt = generatedAt;
         this.departureStationName = locationName;
         this.departureStationCrs = crs;

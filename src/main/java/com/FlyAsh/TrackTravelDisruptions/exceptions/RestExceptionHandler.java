@@ -25,6 +25,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, e));
     }
 
+    @ExceptionHandler(NoJourneyFoundException.class)
+    public ResponseEntity<Object> handleNoJourneyFoundException(NoJourneyFoundException e) {
+        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, e));
+    }
+
     @ExceptionHandler(DuplicateEntryException.class)
     public ResponseEntity<Object> handleDuplicateEntryException(DuplicateEntryException e) {
         return buildResponseEntity(new ApiError(HttpStatus.CONFLICT, e));
