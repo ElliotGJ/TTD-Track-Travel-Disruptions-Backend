@@ -104,7 +104,7 @@ public class JourneyServiceImpl implements JourneyService {
 
                     if (timeOffset > 10 && timeOffset < 120 && journey.getDays().contains(DayOfWeek.from(LocalDateTime.now().plusMinutes(timeOffset)))) {
                         return Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS(), timeOffset));
-                    } else if (timeOffset >= -30 ) {
+                    } else if (timeOffset >= -30 && timeOffset <= 10 && journey.getDays().contains(DayOfWeek.from(LocalDateTime.now().plusMinutes(timeOffset)))) {
                         return Mapper.mapToJourneyDTOWithRailDataDTO(journey, railDataApiService.getNextFastestServiceBetween(journey.getOriginCRS(), journey.getDestinationCRS(), 0));
                     }
                     return Mapper.mapToJourneyDTOWithRailDataDTO(journey, null);
